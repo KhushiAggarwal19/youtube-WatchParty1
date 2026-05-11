@@ -55,7 +55,7 @@ export default function App() {
       playerRef.current = new window.YT.Player("player", {
         height: "500",
         width: "100%",
-        videoId: "dQw4w9WgXcQ",
+        videoId: "",
         playerVars: { controls: 1, autoplay: 0 },
       });
 
