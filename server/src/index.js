@@ -9,7 +9,7 @@ const Room = require("./models/Room");
 
 const app = express();
 
-const CLIENT_URL = (process.env.CLIENT_URL || "http://localhost:5173").replace(/\/+$/g, "");
+const CLIENT_URL = (process.env.CLIENT_URL)
 const ALLOWED_ORIGINS = [CLIENT_URL, `${CLIENT_URL}/`];
 const corsOptions = {
   origin: ALLOWED_ORIGINS,
