@@ -16,7 +16,7 @@ const participantSchema = new mongoose.Schema(
 const roomSchema = new mongoose.Schema(
   {
     roomId: { type: String, required: true, unique: true, index: true },
-    videoId: { type: String, default: "dQw4w9WgXcQ" },
+    videoId: { type: String, default: "" },
     playState: { type: String, enum: ["playing", "paused"], default: "paused" },
     currentTime: { type: Number, default: 0 },
     participants: { type: [participantSchema], default: [] },
