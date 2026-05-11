@@ -235,171 +235,194 @@ export default function App() {
     socket.emit("remove_participant", { userId });
 
   return (
-  <div className="min-h-screen bg-zinc-950 text-white px-4 py-6">
-    <div className="mx-auto max-w-7xl">
+  <div className="min-h-screen bg-white text-black dark:bg-zinc-950 dark:text-white transition-colors duration-300">
+    <div className="mx-auto max-w-7xl px-4 py-6">
 
       {/* HEADER */}
-      <div className="mb-6 border border-zinc-800 bg-zinc-900 rounded-xl p-5">
-        <h1 className="text-3xl font-bold">
-          YouTube Watch Party
-        </h1>
+      <div className="mb-6 flex flex-col gap-4 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5">
 
-        <p className="mt-2 text-sm text-zinc-400">
-          Watch YouTube videos together in sync.
-        </p>
+        <div className="flex items-center justify-between">
 
-        <div className="mt-4 flex flex-wrap gap-3 text-sm">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              YouTube Watch Party
+            </h1>
 
-          <div className="bg-zinc-800 px-3 py-2 rounded-lg">
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              Watch videos together in real-time.
+            </p>
+          </div>
+
+          {/* THEME BUTTON */}
+          <button
+            onClick={() =>
+              document.documentElement.classList.toggle("dark")
+            }
+            className="rounded-lg border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm"
+          >
+            Toggle Theme
+          </button>
+        </div>
+
+        <div className="flex flex-wrap gap-3 text-sm">
+
+          <div className="rounded-lg bg-zinc-100 dark:bg-zinc-900 px-3 py-2">
             Room: {roomId || "Not Joined"}
           </div>
 
-          <div className="bg-zinc-800 px-3 py-2 rounded-lg capitalize">
+          <div className="rounded-lg bg-zinc-100 dark:bg-zinc-900 px-3 py-2 capitalize">
             Role: {myRole || "None"}
           </div>
 
           <div
-            className={`px-3 py-2 rounded-lg ${
+            className={`rounded-lg px-3 py-2 ${
               backendReady
-                ? "bg-green-700"
-                : "bg-yellow-700"
+                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
             }`}
           >
-            {backendReady ? "Server Online" : "Warming Server"}
+            {backendReady ? "Server Online" : "Connecting"}
           </div>
         </div>
       </div>
 
-      {/* MAIN SECTION */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      {/* MAIN GRID */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
 
-        {/* LEFT */}
-        <div className="lg:col-span-3 space-y-6">
+        {/* LEFT SIDE */}
+        <div className="space-y-6 lg:col-span-3">
 
           {/* PLAYER */}
-          <div className="border border-zinc-800 bg-black rounded-xl overflow-hidden">
+          <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-black">
             <div
               id="player"
               className="aspect-video w-full"
             />
           </div>
 
-          {/* ROOM CONTROLS */}
-          <div className="border border-zinc-800 bg-zinc-900 rounded-xl p-5">
+          {/* CONTROLS */}
+          <div className="grid gap-6 md:grid-cols-2">
 
-            <h2 className="text-xl font-semibold mb-4">
-              Room Controls
-            </h2>
+            {/* ROOM */}
+            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5">
 
-            <div className="grid md:grid-cols-2 gap-4">
+              <h2 className="mb-4 text-lg font-semibold">
+                Room Controls
+              </h2>
 
-              <input
-                className="bg-zinc-950 border border-zinc-700 rounded-lg px-4 py-3 outline-none"
-                placeholder="Your Name"
-                value={username}
-                onChange={(e) =>
-                  setUsername(e.target.value)
-                }
-              />
+              <div className="space-y-4">
 
-              <input
-                className="bg-zinc-950 border border-zinc-700 rounded-lg px-4 py-3 outline-none"
-                placeholder="Room Code"
-                value={roomInput}
-                onChange={(e) =>
-                  setRoomInput(e.target.value)
-                }
-              />
+                <input
+                  className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-transparent px-4 py-3 outline-none"
+                  placeholder="Your Name"
+                  value={username}
+                  onChange={(e) =>
+                    setUsername(e.target.value)
+                  }
+                />
+
+                <input
+                  className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-transparent px-4 py-3 outline-none"
+                  placeholder="Room Code"
+                  value={roomInput}
+                  onChange={(e) =>
+                    setRoomInput(e.target.value)
+                  }
+                />
+
+                <div className="flex gap-3">
+
+                  <button
+                    className="w-full rounded-lg bg-black text-white dark:bg-white dark:text-black py-3 text-sm font-medium"
+                    onClick={emitCreate}
+                  >
+                    Create
+                  </button>
+
+                  <button
+                    className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 py-3 text-sm font-medium"
+                    onClick={emitJoin}
+                  >
+                    Join
+                  </button>
+                </div>
+
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  {message}
+                </p>
+              </div>
             </div>
 
-            <div className="mt-4 flex gap-3">
+            {/* VIDEO */}
+            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5">
 
-              <button
-                className="bg-red-600 hover:bg-red-500 px-5 py-3 rounded-lg font-medium"
-                onClick={emitCreate}
-              >
-                Create Room
-              </button>
+              <h2 className="mb-4 text-lg font-semibold">
+                Video Controls
+              </h2>
 
-              <button
-                className="bg-blue-600 hover:bg-blue-500 px-5 py-3 rounded-lg font-medium"
-                onClick={emitJoin}
-              >
-                Join Room
-              </button>
-            </div>
+              <div className="space-y-4">
 
-            <p className="mt-4 text-sm text-zinc-400">
-              {message}
-            </p>
-          </div>
+                <input
+                  className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-transparent px-4 py-3 outline-none"
+                  placeholder="Paste YouTube URL or ID"
+                  value={videoInput}
+                  onChange={(e) =>
+                    setVideoInput(e.target.value)
+                  }
+                  disabled={!canControl}
+                />
 
-          {/* VIDEO CONTROLS */}
-          <div className="border border-zinc-800 bg-zinc-900 rounded-xl p-5">
+                <button
+                  className="w-full rounded-lg bg-black text-white dark:bg-white dark:text-black py-3 text-sm font-medium disabled:opacity-40"
+                  disabled={!canControl}
+                  onClick={changeVideo}
+                >
+                  Change Video
+                </button>
 
-            <h2 className="text-xl font-semibold mb-4">
-              Video Controls
-            </h2>
+                <div className="grid grid-cols-2 gap-3">
 
-            <input
-              className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-4 py-3 outline-none"
-              placeholder="Paste YouTube URL or Video ID"
-              value={videoInput}
-              onChange={(e) =>
-                setVideoInput(e.target.value)
-              }
-              disabled={!canControl}
-            />
+                  <button
+                    className="rounded-lg border border-zinc-300 dark:border-zinc-700 py-3 text-sm font-medium disabled:opacity-40"
+                    disabled={!canControl}
+                    onClick={emitPlay}
+                  >
+                    Play
+                  </button>
 
-            <div className="mt-4 flex flex-wrap gap-3">
-
-              <button
-                className="bg-pink-600 hover:bg-pink-500 px-5 py-3 rounded-lg font-medium disabled:opacity-40"
-                disabled={!canControl}
-                onClick={changeVideo}
-              >
-                Change Video
-              </button>
-
-              <button
-                className="bg-green-600 hover:bg-green-500 px-5 py-3 rounded-lg font-medium disabled:opacity-40"
-                disabled={!canControl}
-                onClick={emitPlay}
-              >
-                Play
-              </button>
-
-              <button
-                className="bg-red-600 hover:bg-red-500 px-5 py-3 rounded-lg font-medium disabled:opacity-40"
-                disabled={!canControl}
-                onClick={emitPause}
-              >
-                Pause
-              </button>
+                  <button
+                    className="rounded-lg border border-zinc-300 dark:border-zinc-700 py-3 text-sm font-medium disabled:opacity-40"
+                    disabled={!canControl}
+                    onClick={emitPause}
+                  >
+                    Pause
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* RIGHT SIDE */}
-        <div className="border border-zinc-800 bg-zinc-900 rounded-xl p-5 h-fit">
+        {/* PARTICIPANTS */}
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 h-fit">
 
-          <div className="flex items-center justify-between mb-5">
+          <div className="mb-5 flex items-center justify-between">
 
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-lg font-semibold">
               Participants
             </h2>
 
-            <div className="bg-zinc-800 px-3 py-1 rounded-lg text-sm">
+            <div className="rounded-lg bg-zinc-100 dark:bg-zinc-900 px-3 py-1 text-sm">
               {participants.length}
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
 
             {participants.map((p) => (
               <div
                 key={p.userId}
-                className="bg-zinc-950 border border-zinc-800 rounded-lg p-4"
+                className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4"
               >
 
                 <div className="flex items-center justify-between">
@@ -409,24 +432,24 @@ export default function App() {
                       {p.username}
 
                       {p.userId === myUserId && (
-                        <span className="text-red-400 ml-1">
+                        <span className="ml-1 text-zinc-500">
                           (You)
                         </span>
                       )}
                     </p>
 
-                    <p className="text-sm text-zinc-400 capitalize mt-1">
+                    <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400 capitalize">
                       {p.role}
                     </p>
                   </div>
 
                   <div
-                    className={`h-3 w-3 rounded-full ${
+                    className={`h-2.5 w-2.5 rounded-full ${
                       p.role === "host"
-                        ? "bg-red-500"
+                        ? "bg-black dark:bg-white"
                         : p.role === "moderator"
-                        ? "bg-blue-500"
-                        : "bg-zinc-500"
+                        ? "bg-zinc-500"
+                        : "bg-zinc-300 dark:bg-zinc-700"
                     }`}
                   />
                 </div>
@@ -436,7 +459,7 @@ export default function App() {
                     <div className="mt-4 space-y-2">
 
                       <button
-                        className="w-full bg-blue-600 hover:bg-blue-500 py-2 rounded-lg text-sm"
+                        className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 py-2 text-sm"
                         onClick={() =>
                           assignRole(
                             p.userId,
@@ -448,7 +471,7 @@ export default function App() {
                       </button>
 
                       <button
-                        className="w-full bg-zinc-700 hover:bg-zinc-600 py-2 rounded-lg text-sm"
+                        className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 py-2 text-sm"
                         onClick={() =>
                           assignRole(
                             p.userId,
@@ -460,7 +483,7 @@ export default function App() {
                       </button>
 
                       <button
-                        className="w-full bg-red-700 hover:bg-red-600 py-2 rounded-lg text-sm"
+                        className="w-full rounded-lg border border-red-300 text-red-600 dark:border-red-700 dark:text-red-400 py-2 text-sm"
                         onClick={() =>
                           removeParticipant(p.userId)
                         }
