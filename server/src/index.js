@@ -129,7 +129,7 @@ io.on("connection", (socket) => {
     const roomId = generateRoomId();
     const room = {
       roomId,
-      videoId: "dQw4w9WgXcQ",
+      videoId: " ",
       playState: "paused",
       currentTime: 0,
       lastUpdateTs: Date.now(),
